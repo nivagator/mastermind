@@ -1,6 +1,7 @@
 # from codegen import getCode 
 import random
 colors = ['R','O','Y','G','P','W']
+from clear import clear
 
 def getCode():
     # orange, red, white, green, yellow, purple
@@ -23,7 +24,7 @@ def startGame():
     print()
     print("Adapted and coded by McKennah and Gavin")
     print()
-    go = input("Are you ready to play? [Y/N]")
+    go = input("Are you ready to play? [Y/N]").upper()
     if go == 'Y':
         print("Let's play!")
         code = getCode()
@@ -38,6 +39,7 @@ def play(code):
     # initialize variables
     win = False
     guesses = []
+    # codelist = list(code)
 
     # build game board
     for i in range(0,10):
@@ -50,19 +52,53 @@ def play(code):
         guesses[i][1] = getGuess()
         
         # check guess?
-         
+        # check for 'Red' pegs = where color and location are correct
+        r = [] # red pegs
+        w = 0 # white pegs
+        g = list(guesses[i][1].upper()) # guess
+        wgl = list(g) # white guess list to be used for white pegs
+        wcl = list(code) # white code list 
+        # print("g: " + str(len(g)))
+        # print("code: " + str(len(code)))
+        # print("wgl: " + str(len(wgl)))
+        # print("wcl: " + str(len(wcl)))
+        # print(code, guesses[i][1].upper())
+        for j in range(3,-1,-1):
+            # print(j, g[j], code[j])
+            if g[j] == code[j]:
+                r.append(1)
+
+                wgl.pop(j)
+                wcl.pop(j)
+            else:
+                r.append(0)
+        
+        guesses[i][2] = sum(r)
+        # print("R: " + str(guesses[i][2]))
+        # print("wgl", "".join(wgl))
+        # print("wcl", "".join(wcl))
+
+        # white pegs - look at those not matched exactly and check to see if they exist and how many.
+        if len(wgl) > 0:
+            for k in set(wgl):
+                w += "".join(wcl).count(k)
+        guesses[i][3] = w   
+
         # if guess is correct 
-        # set win = True
-        # break
+        if sum(r) == 4:
+            win = True
+            break
 
         # print game board
+        # print(code)
+        clear()
         print('Turn\tGuess\tRed\tWhite')   
         for x in guesses[::-1]:
             print("%i\t%s\t%i\t%i" % (x[0], x[1], x[2], x[3]))
     
     # print("this is the play function returning the valid guess: " +guess)
     if win:
-        print("Congratulations!") # you correctly guess the secret code in x tries! Code: code0
+        print("Congratulations!\nYou correctly guess the secret code!\nCode:", "".join(code))
     return
 
 def getGuess():
@@ -72,10 +108,10 @@ def getGuess():
         i = 0    
         charcount = 0
         # print("\tstart i = " , str(i)) 
-        guess = input("Enter your guess: ")
+        guess = input("Enter your guess: ").upper()
         # Check the length
         while len(guess) != 4:
-            guess = input("Your guess must be exactly 4 characters!\nTry again: ")
+            guess = input("Your guess must be exactly 4 characters!\nTry again: ").upper()
         i += 1 # guess is the right length    
         # print("\tlength check i = " , str(i))       
         # Check the characters
