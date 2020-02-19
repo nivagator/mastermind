@@ -79,6 +79,12 @@ def play(code):
 
         # print game board
         clear()
+        #print("Turn x")
+        print('-----------------------------------------')
+        print('Colors: R,O,Y,G,W,P',)
+        print('Red: Correct color, correct position.')
+        print('White: Correct color, incorrect position.')
+        print('-----------------------------------------')
         print('Turn\tGuess\tRed\tWhite')   
         for x in guesses[::-1]:
             print("%i\t%s\t%i\t%i" % (x[0], x[1], x[2], x[3]))
